@@ -29,7 +29,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
       - name: Test converter
-        run: python -m unittest discover -s tests -v
+        run: python -m unittest -v noaa_validator
       - name: Download and convert NOAA forecasts
         run: python publish_forecasts.py --output site --pause 10.5
       - uses: actions/configure-pages@v5
