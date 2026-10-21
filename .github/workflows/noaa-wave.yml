@@ -1,0 +1,41 @@
+
+name: Publish NOAA wave JSON
+on:
+  workflow_dispatch:
+  schedule:
+    # NOAA 00/06/12/18 UTC model runs; 2+ hour publication lag allowance.
+    - cron: '25 2,8,14,20 * * *'
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: noaa-wave-pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install forecast decoder
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+      - name: Test converter
+        run: python -m unittest discover -s tests -v
+      - name: Download and convert NOAA forecasts
+        run: python publish_forecasts.py --output site --pause 10.5
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
