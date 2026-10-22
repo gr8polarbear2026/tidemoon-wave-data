@@ -10,7 +10,7 @@ import noaa_validator
 
 UTC = dt.timezone.utc
 REGIONS = ('carrabelle', 'boston', 'charleston', 'sandiego', 'galveston')
-HOURS = (3,6,9,12)  # Small proof-of-concept window; larger forecast horizon requires separate validation.
+HOURS = (3,6,9,12,15,18,21,24)  # Eight verified 3-hour slots; no filling gaps or invented values.
 FIELDS = {'swh','perpw','dirpw','shww','mpww','wvdir', 'ws', 'wdir'} | {
     f'{prefix}_partition_{n}' for prefix in ('shts','mpts','swdir') for n in range(1,4)
 }
@@ -112,7 +112,7 @@ def write_publication(bundles, destination):
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument('--date',help='NOAA cycle UTC date YYYYMMDD (default: now minus 2h)')
+    p.add_argument('--date',help='NOAA cycle UTC date YYYYMMDD (default: verified recent cycle)')
     p.add_argument('--cycle',choices=('00','06','12','18'))
     p.add_argument('--output',default='site')
     p.add_argument('--pause',type=float,default=10.5)
