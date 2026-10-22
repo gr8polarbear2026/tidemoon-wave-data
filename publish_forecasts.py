@@ -16,12 +16,44 @@ FIELDS = {'swh','perpw','dirpw','shww','mpww','wvdir', 'ws', 'wdir'} | {
 }
 
 def choose_cycle(now):
-    """Safely request cycle from two hours ago to allow for NOAA availability lag.
-    This is only a heuristic; if NOAA hasn't published it, keep old publication.
-    """
-    lagged=now.astimezone(UTC)-dt.timedelta(hours=2)
+    """Most recent nominal 6-hour model cycle; publication is checked separately."""
+    lagged=now.astimezone(UTC)-dt.timedelta(hours=4)
     cycle=(lagged.hour//6)*6
     return lagged.strftime('%Y%m%d'), f'{cycle:02d}'
+
+
+def candidate_cycles(now, count=5):
+    """Try recent cycles in UTC order, allowing for publication delays."""
+    lagged=now.astimezone(UTC)-dt.timedelta(hours=4)
+    start=lagged.replace(hour=(lagged.hour//6)*6, minute=0, second=0, microsecond=0)
+    for i in range(count):
+        current=start-dt.timedelta(hours=6*i)
+        yield current.strftime('%Y%m%d'), current.strftime('%H')
+
+
+def cycle_available(date, cycle, timeout=20):
+    """Check published GRIB index files before expensive filtered downloads.
+
+    The f012 index is published after earlier forecast hours. A missing index
+    means the cycle is not ready for this publisher; never fabricate values.
+    """
+    import requests
+    filename=f'gfswave.t{cycle}z.global.0p16.f012.grib2.idx'
+    url=(f'https://nomads.ncep.noaa.gov/pub/data/nccf/com/gfs/prod/'
+         f'gfs.{date}/{cycle}/wave/gridded/{filename}')
+    try:
+        response=requests.get(url, timeout=timeout,
+                              headers={'User-Agent':'TideMoonWavePublisher/1.1'})
+        if response.status_code != 200:
+            print(f'NOAA cycle {date} {cycle}Z not ready: HTTP {response.status_code}',flush=True)
+            return False
+        if not response.text.strip() or 'HTSGW' not in response.text and 'WVHGT' not in response.text:
+            print(f'NOAA cycle {date} {cycle}Z missing wave fields in index',flush=True)
+            return False
+        return True
+    except requests.RequestException as exc:
+        print(f'NOAA cycle {date} {cycle}Z availability error: {exc}',flush=True)
+        return False
 
 def compact_row(row, cycle_time):
     if row.get('status')!='PASS' or not row.get('common_gridpoint'): return None
@@ -86,9 +118,19 @@ def main():
     p.add_argument('--pause',type=float,default=10.5)
     args=p.parse_args()
     now=dt.datetime.now(UTC)
-    date,cycle=choose_cycle(now)
-    date=args.date or date; cycle=args.cycle or cycle
     if args.pause < 10: p.error('NOAA requires at least 10 seconds between downloads')
+    if args.date or args.cycle:
+        # Explicit cycle is useful for diagnostics and must not silently change.
+        date,cycle=choose_cycle(now)
+        date=args.date or date; cycle=args.cycle or cycle
+        if not cycle_available(date,cycle):
+            raise SystemExit(f'NOAA cycle {date} {cycle}Z not published; existing site remains unchanged.')
+    else:
+        selected=next(((d,c) for d,c in candidate_cycles(now) if cycle_available(d,c)),None)
+        if selected is None:
+            raise SystemExit('No verified NOAA forecast cycle in last 28 hours; existing site remains unchanged.')
+        date,cycle=selected
+    print(f'Using verified NOAA cycle {date} {cycle}Z',flush=True)
     # No public site files are created unless every download and decode passes.
     with tempfile.TemporaryDirectory() as temp:
         opts=SimpleNamespace(date=date, cycle=cycle,
