@@ -10,7 +10,7 @@ import noaa_validator
 
 UTC = dt.timezone.utc
 REGIONS = ('carrabelle', 'boston', 'charleston', 'sandiego', 'galveston')
-HOURS = (3,6,9,12,15,18,21,24)  # Eight verified 3-hour slots; no filling gaps or invented values.
+HOURS = tuple(range(3, 37, 3))  # Twelve native 3-hour slots through +36h; no interpolation.
 FIELDS = {'swh','perpw','dirpw','shww','mpww','wvdir', 'ws', 'wdir'} | {
     f'{prefix}_partition_{n}' for prefix in ('shts','mpts','swdir') for n in range(1,4)
 }
@@ -136,7 +136,7 @@ def main():
         opts=SimpleNamespace(date=date, cycle=cycle,
             locations=','.join(REGIONS),hours=','.join(map(str,HOURS)),
             output=str(pathlib.Path(temp)/'raw'),pause=args.pause,
-            keep_grib=False,allow_many=False)
+            keep_grib=False,allow_many=True)
         rc=noaa_validator.run(opts)
         if rc != 0: raise SystemExit('NOAA incomplete: NO publication. Retry later or choose prior cycle.')
         report=json.loads((pathlib.Path(temp)/'raw'/'validation_report.json').read_text('utf-8'))
