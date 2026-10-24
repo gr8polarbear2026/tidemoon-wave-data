@@ -114,10 +114,15 @@ def extract_grib(path, lat, lon):
                 lev_string=get_key('levelist')
                 scaled_surface=get_key('scaledValueOfFirstFixedSurface')
                 surface_type=get_key('typeOfFirstFixedSurface')
-                if get_key('typeOfLevel')=='orderedSequenceData' and level in {'1','2','3'}:
-                    field_id=short.lower()+'_partition_'+level
-                else:
-                    field_id=short.lower()
+                # GRIB libraries may expose ordered swell levels under different
+                # key names. Match an actual sequence index; never guess a partition.
+                field_id=short.lower()
+                if field_id in {'shts','mpts','swdir','swell','swper'}:
+                    sequence_candidates=(level, scaled_surface, get_key('levelist'))
+                    sequence=next((str(v) for v in sequence_candidates
+                                   if str(v) in {'1','2','3'}),None)
+                    if sequence:
+                        field_id=field_id+'_partition_'+sequence
                 try: missing=eccodes.codes_get(gid,'missingValue')
                 except Exception: missing=None
                 decoded.append({'short':short,'field_id':field_id,'level':level,
@@ -131,6 +136,7 @@ def extract_grib(path, lat, lon):
             finally:
                 eccodes.codes_release(gid)
     point=select_common_gridpoint(decoded,lat,lon)
+    print('GRIB fields:',[(x['field_id'],x['level'],x['typeOfLevel'],x['first_surface_value']) for x in decoded],flush=True)
     rows=[]
     for f in decoded:
         val=value_at_gridpoint(f,point)
@@ -170,7 +176,7 @@ def run(args):
                 point,fields=extract_grib(path,loc['lat'],loc['lon'])
                 entry.update(status='PASS' if point and any(f['field_id']=='swh' and f['value'] is not None for f in fields) else 'NO_VALID_GRIDPOINT',
                              bytes=len(response.content), common_gridpoint=point, fields=fields,
-                             swell_specific_found=any((f['field_id'].startswith(('shts_partition_','mpts_partition_','swdir_partition_'))) and f['value'] is not None for f in fields),
+                             swell_specific_found=any((f['field_id'].startswith(('shts_partition_','mpts_partition_','swdir_partition_','swell_partition_','swper_partition_'))) and f['value'] is not None for f in fields),
                              missing_value_count=sum(f['value'] is None for f in fields))
                 if not args.keep_grib: path.unlink(missing_ok=True)
             except Exception as exc: entry['error']=f'{type(exc).__name__}: {exc}'
