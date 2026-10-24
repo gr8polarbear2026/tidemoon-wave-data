@@ -82,6 +82,8 @@ def select_common_gridpoint(decoded, lat, lon, max_km=90):
             candidates.append((dist, la, lo))
     if not candidates:
         return None
+    # Prefer the nearest SWH-valid gridpoint. Do not move offshore merely
+    # because swell values are missing: that would misrepresent the location.
     _, la, lo = min(candidates)
     return {'lat':round(la,4), 'lon':round(lo,4),
             'distance_km':round(distance_km(lat,lon,la,lo),1)}
@@ -137,13 +139,22 @@ def extract_grib(path, lat, lon):
                 eccodes.codes_release(gid)
     point=select_common_gridpoint(decoded,lat,lon)
     print('GRIB fields:',[(x['field_id'],x['level'],x['typeOfLevel'],x['first_surface_value']) for x in decoded],flush=True)
+    # Diagnostic: distinguish NOAA-masked swell at the chosen common point
+    # from a field missing throughout the downloaded coastal subregion.
+    # Nearby values are diagnostic ONLY: never substitute another gridpoint.
     rows=[]
     for f in decoded:
+        valid_count=sum(1 for v in f['values'] if value_valid(v,f['missing']))
         val=value_at_gridpoint(f,point)
+        if f['field_id'].endswith(('_partition_1','_partition_2','_partition_3')):
+            print('SWELL_DIAGNOSTIC',f['field_id'],
+                  'valid_grid_cells',valid_count,'of',len(f['values']),
+                  'at_common_point',val,'missing_marker',str(f['missing']),flush=True)
         rows.append({k:f[k] for k in ('field_id','level','typeOfLevel','levelist','first_surface_type',
                                      'first_surface_value','description','units','forecast_step')} |
                     {'field':f['short'], 'grid_points':len(f['values']),
-                     'value':val, 'status':'AVAILABLE' if val is not None else 'MISSING_AT_COMMON_POINT'})
+                     'value':val, 'valid_grid_cells':valid_count,
+                     'status':'AVAILABLE' if val is not None else ('MISSING_AT_COMMON_POINT' if valid_count else 'NO_VALID_CELLS_IN_SUBREGION')})
     return point, rows
 
 def run(args):
