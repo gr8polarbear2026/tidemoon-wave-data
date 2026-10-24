@@ -1,6 +1,13 @@
 
 name: Publish NOAA wave JSON
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'noaa_validator.py'
+      - 'publish_forecasts.py'
+      - 'src/index.js'
+      - '.github/workflows/noaa-wave.yml'
   workflow_dispatch:
   schedule:
     # NOAA 00/06/12/18 UTC model runs; 2+ hour publication lag allowance.
