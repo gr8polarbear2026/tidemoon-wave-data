@@ -1,0 +1,25 @@
+name: Diagnose Charleston Atlantic swell
+on:
+  push:
+    branches: [main]
+    paths:
+      - diagnose_atlantic_swell.py
+      - .github/workflows/diagnose-atlantic-swell.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install NOAA decoder
+        run: python -m pip install -r requirements.txt
+      - name: Check code syntax
+        run: python -m py_compile diagnose_atlantic_swell.py noaa_validator.py
+      - name: Compare global and North Atlantic swell fields
+        run: python diagnose_atlantic_swell.py
