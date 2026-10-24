@@ -57,8 +57,10 @@ def value_valid(v, missing=None):
     return True
 
 
-def format_url(date, cycle, hour, lat, lon):
-    filename=f'gfswave.t{cycle}z.global.0p16.f{hour:03d}.grib2'
+def format_url(date, cycle, hour, lat, lon, domain='global.0p16'):
+    if domain not in {'global.0p16', 'atlocn.0p16'}:
+        raise ValueError('Unsupported NOAA wave domain')
+    filename=f'gfswave.t{cycle}z.{domain}.f{hour:03d}.grib2'
     directory=f'/gfs.{date}/{cycle}/wave/gridded'
     # small box around target. Tested target point can snap to ocean or masked land.
     q={'file':filename,'lev_surface':'on',
