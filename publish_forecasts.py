@@ -11,8 +11,8 @@ import noaa_validator
 UTC = dt.timezone.utc
 REGIONS = ('carrabelle', 'boston', 'charleston', 'sandiego', 'galveston')
 HOURS = tuple(range(3, 37, 3))  # Twelve native 3-hour slots through +36h; no interpolation.
-FIELDS = {'swh','perpw','dirpw','shww','mpww','wvdir', 'ws', 'wdir'} | {
-    f'{prefix}_partition_{n}' for prefix in ('shts','mpts','swdir') for n in range(1,4)
+FIELDS = {'swh','perpw','dirpw','shww','mpww','wvdir','wvhgt','wvper','wind','ws','wdir'} | {
+    f'{prefix}_partition_{n}' for prefix in ('shts','mpts','swdir','swell','swper') for n in range(1,4)
 }
 
 def choose_cycle(now):
