@@ -26,7 +26,13 @@ for label,url,expect_current in cases:
             data=json.load(f)
     except urllib.error.HTTPError as err:
         code=err.code
-        data=json.loads(err.read().decode("utf-8"))
+        body=err.read(1200).decode("utf-8",errors="replace")
+        try:
+            data=json.loads(body)
+        except ValueError:
+            data={"status":"NON_JSON_EDGE_RESPONSE"}
+        if code==403:
+            print(f"ACCESS_BLOCKED {label}: HTTP 403; server={err.headers.get('server','unknown')}; content_type={err.headers.get('content-type','unknown')}; body_preview={body[:140]!r}")
     except Exception as err:
         failed+=1
         print(f"FAIL {label}: network error: {err}")
@@ -44,4 +50,6 @@ for label,url,expect_current in cases:
         print(f"{'PASS' if valid else 'FAIL'} {label}: HTTP {code} status={status}")
     if not valid: failed+=1
 print(f"Live smoke test: {len(cases)-failed}/{len(cases)} successful")
+if failed:
+    print("No conclusions about wave coverage can be drawn from shared HTTP 403 responses.")
 sys.exit(1 if failed else 0)
