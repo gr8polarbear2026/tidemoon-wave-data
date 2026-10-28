@@ -19,6 +19,12 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Validate additional US offshore sites (no publication)
         run: python nationwide_pilot.py --output pilot_results --hours 3,6 --pause 10.5
+      - name: Generate validated coordinate lookup index
+        if: always()
+        run: |
+          if [ -f pilot_results/validation_report.json ]; then
+            python validated_grid_lookup.py pilot_results/validation_report.json --output pilot_results/validated_grid_index.json
+          fi
       - name: Preserve coverage diagnostics even on partial NOAA failures
         if: always()
         uses: actions/upload-artifact@v4
