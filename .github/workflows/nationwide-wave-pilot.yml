@@ -1,0 +1,28 @@
+name: Nationwide wave coverage pilot (nonpublishing)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install GRIB decoding packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libeccodes0 libeccodes-dev
+          python -m pip install -r requirements.txt
+      - name: Validate additional US offshore sites (no publication)
+        run: python nationwide_pilot.py --output pilot_results --hours 3,6 --pause 10.5
+      - name: Preserve coverage diagnostics even on partial NOAA failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nationwide-wave-pilot-diagnostics
+          path: pilot_results/*.json
+          if-no-files-found: warn
