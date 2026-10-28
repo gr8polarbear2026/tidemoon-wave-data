@@ -6,7 +6,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -18,17 +18,25 @@ jobs:
           sudo apt-get install -y libeccodes0 libeccodes-dev
           python -m pip install -r requirements.txt
       - name: Validate Panhandle test points without publishing
-        run: python panhandle_pilot.py --output panhandle_results --hours 3,6 --pause 10.5
+        run: python panhandle_pilot.py --output panhandle_results --hours 3,6,9,12,15,18,21,24,27,30,33,36 --pause 10.5
       - name: Build validated coordinate index
         if: always()
         run: |
           if [ -f panhandle_results/validation_report.json ]; then
             python validated_grid_lookup.py panhandle_results/validation_report.json --output panhandle_results/validated_grid_index.json
           fi
+      - name: Stage Panhandle forecast JSON when every requested value passes
+        if: always()
+        run: |
+          if [ -f panhandle_results/validation_report.json ]; then
+            python stage_panhandle_forecasts.py --report panhandle_results/validation_report.json --out panhandle_results/staged_forecasts
+          fi
       - name: Save diagnostic results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: florida-panhandle-wave-diagnostics
-          path: panhandle_results/*.json
+          path: |
+            panhandle_results/*.json
+            panhandle_results/staged_forecasts/*.json
           if-no-files-found: warn
