@@ -1,0 +1,72 @@
+name: Refresh Florida Panhandle wave forecasts
+
+on:
+  workflow_dispatch:
+  schedule:
+    # NOAA GFS-Wave cycles 00/06/12/18 UTC, allowing publication lag.
+    - cron: '45 3,9,15,21 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: panhandle-wave-publication
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install NOAA forecast decoder
+        run: python -m pip install -r requirements.txt
+
+      - name: Verify publisher source
+        run: |
+          python -m py_compile noaa_validator.py publish_forecasts.py publish_panhandle.py panhandle_pilot.py validated_grid_lookup.py
+
+      - name: Generate and validate complete Panhandle publication
+        run: python publish_panhandle.py --output "$RUNNER_TEMP/panhandle-ready" --pause 10.5
+
+      - name: Confirm all nine required locations and grid index before committing
+        env:
+          PUBLICATION_DIR: ${{ runner.temp }}/panhandle-ready
+        run: |
+          python - <<'PY'
+          import json, os, pathlib
+          from panhandle_pilot import LOCATIONS
+          root = pathlib.Path(os.environ['PUBLICATION_DIR'])
+          for name in LOCATIONS:
+              data = json.loads((root / f'{name}.json').read_text())
+              assert data['location_id'] == name
+              assert data['forecast'], name
+          index = json.loads((root / 'validated_grid_index.json').read_text())
+          assert index['schema_version'] == 1 and index['points']
+          print('Validated nine Panhandle files and coordinate index')
+          PY
+
+      - name: Publish verified files to repository
+        env:
+          PUBLICATION_DIR: ${{ runner.temp }}/panhandle-ready
+        run: |
+          mkdir -p panhandle
+          cp "$PUBLICATION_DIR"/*.json panhandle/
+          git add panhandle
+          if git diff --cached --quiet; then
+            echo "No forecast changes to publish"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Refresh verified Panhandle wave forecast JSON"
+          git push
