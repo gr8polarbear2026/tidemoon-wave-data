@@ -159,6 +159,28 @@ def extract_grib(path, lat, lon):
                      'status':'AVAILABLE' if val is not None else ('MISSING_AT_COMMON_POINT' if valid_count else 'NO_VALID_CELLS_IN_SUBREGION')})
     return point, rows
 
+def get_grib_with_retries(session, url, timeout=70, sleep=time.sleep):
+    """Retry only transient NOAA HTTP/network failures; never accept invalid data."""
+    retry_statuses = {429, 500, 502, 503, 504}
+    delays = (12, 24)
+    for attempt in range(len(delays) + 1):
+        try:
+            response = session.get(url, timeout=timeout)
+            response.raise_for_status()
+            return response
+        except requests.HTTPError as exc:
+            status = exc.response.status_code if exc.response is not None else None
+            if status not in retry_statuses or attempt == len(delays):
+                raise
+            reason = f'HTTP {status}'
+        except (requests.Timeout, requests.ConnectionError) as exc:
+            if attempt == len(delays):
+                raise
+            reason = type(exc).__name__
+        print(f'NOAA transient error ({reason}); retry {attempt + 1}/{len(delays)} after {delays[attempt]}s', flush=True)
+        sleep(delays[attempt])
+
+
 def run(args):
     output=pathlib.Path(args.output);output.mkdir(parents=True,exist_ok=True)
     names=args.locations.split(',')
@@ -181,8 +203,7 @@ def run(args):
                    'forecast_hour':hour,'url':url,'status':'FAIL'}
             print(f'{name} +{hour:03d}h...',flush=True)
             try:
-                response=session.get(url,timeout=70)
-                response.raise_for_status()
+                response=get_grib_with_retries(session,url,timeout=70)
                 if not response.content.startswith(b'GRIB'):
                     raise RuntimeError('Expected GRIB response, got '+repr(response.text[:170]))
                 path=output/f'{name}_f{hour:03d}.grib2';path.write_bytes(response.content)
