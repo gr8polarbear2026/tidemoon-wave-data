@@ -32,10 +32,26 @@ jobs:
         run: python publish_panhandle.py --output panhandle --pause 10.5
       - name: Commit only validated Panhandle JSON (never legacy files)
         run: |
-          git add panhandle/
-          if git diff --cached --quiet; then
-            echo "No changes in validated forecasts"
-          else
+          set -euo pipefail
+          # Keep generated, validated data outside the checkout during synchronization.
+          stage_dir="$(mktemp -d)"
+          cp panhandle/*.json "$stage_dir/"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p panhandle
+            cp "$stage_dir"/*.json panhandle/
+            git add -- panhandle/*.json
+            if git diff --cached --quiet; then
+              echo "No changes in validated forecasts"
+              exit 0
+            fi
             git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Update verified Panhandle NOAA wave forecasts"
-            git push origin HEAD:main
-          fi
+            if git push origin HEAD:main; then
+              echo "Published validated Panhandle forecasts"
+              exit 0
+            fi
+            echo "Main moved during publication; retrying against the latest branch (attempt $attempt/3)"
+          done
+          echo "Unable to publish after three synchronization attempts" >&2
+          exit 1
