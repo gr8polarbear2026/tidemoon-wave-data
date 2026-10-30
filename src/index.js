@@ -1,3 +1,4 @@
+import {panhandleByCoordinates} from './panhandle_lookup.js';
 const ORIGIN = 'https://gr8polarbear2026.github.io/tidemoon-wave-data';
 const LOCATIONS = new Set(['carrabelle', 'boston', 'charleston', 'sandiego', 'galveston']);
 const MAX_CYCLE_AGE_MS = 18 * 60 * 60 * 1000;
@@ -15,6 +16,17 @@ export default {
     const url = new URL(request.url);
     if (!url.pathname.startsWith('/api/waves')) return env.ASSETS.fetch(request);
     if (request.method !== 'GET') return json({status:'METHOD_NOT_ALLOWED'},405);
+    if (url.pathname === '/api/waves/panhandle/coordinates') {
+      const lat=Number(url.searchParams.get('lat')), lon=Number(url.searchParams.get('lon'));
+      if (url.searchParams.get('lat')===null || url.searchParams.get('lon')===null)
+        return json({status:'INVALID_COORDINATES'},400);
+      const result=await panhandleByCoordinates(lat,lon,fetch);
+      return json(result, result.status==='CURRENT'?200:
+        result.status==='INVALID_COORDINATES'?400:
+        result.status==='OUTSIDE_VERIFIED_PANHANDLE_COVERAGE'?404:
+        result.status==='STALE'?503:502);
+    }
+
     const slug = url.pathname.match(/^\/api\/waves\/([a-z]+)\/?$/)?.[1] || url.searchParams.get('location');
     if (!LOCATIONS.has(slug)) return json({status:'UNSUPPORTED_LOCATION', supported:[...LOCATIONS]},404);
     try {
