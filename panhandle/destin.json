@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "source": "NOAA NCEP GFS-Wave NOMADS",
-  "generated_at_utc": "2026-11-05T21:26:47.129504Z",
-  "model_cycle_utc": "2026-11-05T12:00:00Z",
+  "generated_at_utc": "2026-11-06T09:42:55.497031Z",
+  "model_cycle_utc": "2026-11-06T00:00:00Z",
   "location_id": "destin",
   "location_label": "Destin offshore test",
   "requested_coordinates": {
@@ -13,286 +13,6 @@
   "forecast": [
     {
       "forecast_hour": 3,
-      "valid_utc": "2026-11-05T15:00:00Z",
-      "ocean_gridpoint": {
-        "lat": 30.1667,
-        "lon": -86.5,
-        "distance_km": 3.8
-      },
-      "fields": {
-        "ws": {
-          "value": 2.55,
-          "units": "m s**-1"
-        },
-        "wdir": {
-          "value": 191.19,
-          "units": "Degree true"
-        },
-        "swh": {
-          "value": 0.33,
-          "units": "m"
-        },
-        "perpw": {
-          "value": 4.4,
-          "units": "s"
-        },
-        "dirpw": {
-          "value": 141.19,
-          "units": "Degree true"
-        },
-        "shww": null,
-        "shts_partition_1": {
-          "value": 0.28,
-          "units": "m"
-        },
-        "shts_partition_2": {
-          "value": 0.14,
-          "units": "m"
-        },
-        "shts_partition_3": {
-          "value": 0.09,
-          "units": "m"
-        },
-        "mpww": null,
-        "mpts_partition_1": {
-          "value": 4.4,
-          "units": "s"
-        },
-        "mpts_partition_2": {
-          "value": 2.66,
-          "units": "s"
-        },
-        "mpts_partition_3": {
-          "value": 7.0,
-          "units": "s"
-        },
-        "wvdir": null,
-        "swdir_partition_1": {
-          "value": 148.29,
-          "units": "Degree true"
-        },
-        "swdir_partition_2": {
-          "value": 238.97,
-          "units": "Degree true"
-        },
-        "swdir_partition_3": {
-          "value": 179.53,
-          "units": "Degree true"
-        }
-      }
-    },
-    {
-      "forecast_hour": 6,
-      "valid_utc": "2026-11-05T18:00:00Z",
-      "ocean_gridpoint": {
-        "lat": 30.1667,
-        "lon": -86.5,
-        "distance_km": 3.8
-      },
-      "fields": {
-        "ws": {
-          "value": 4.04,
-          "units": "m s**-1"
-        },
-        "wdir": {
-          "value": 199.68,
-          "units": "Degree true"
-        },
-        "swh": {
-          "value": 0.34,
-          "units": "m"
-        },
-        "perpw": {
-          "value": 4.28,
-          "units": "s"
-        },
-        "dirpw": {
-          "value": 142.1,
-          "units": "Degree true"
-        },
-        "shww": {
-          "value": 0.23,
-          "units": "m"
-        },
-        "shts_partition_1": {
-          "value": 0.24,
-          "units": "m"
-        },
-        "shts_partition_2": {
-          "value": 0.09,
-          "units": "m"
-        },
-        "shts_partition_3": null,
-        "mpww": {
-          "value": 2.5,
-          "units": "s"
-        },
-        "mpts_partition_1": {
-          "value": 4.29,
-          "units": "s"
-        },
-        "mpts_partition_2": {
-          "value": 6.98,
-          "units": "s"
-        },
-        "mpts_partition_3": null,
-        "wvdir": {
-          "value": 211.69,
-          "units": "Degree true"
-        },
-        "swdir_partition_1": {
-          "value": 146.83,
-          "units": "Degree true"
-        },
-        "swdir_partition_2": {
-          "value": 179.77,
-          "units": "Degree true"
-        },
-        "swdir_partition_3": null
-      }
-    },
-    {
-      "forecast_hour": 9,
-      "valid_utc": "2026-11-05T21:00:00Z",
-      "ocean_gridpoint": {
-        "lat": 30.1667,
-        "lon": -86.5,
-        "distance_km": 3.8
-      },
-      "fields": {
-        "ws": {
-          "value": 4.15,
-          "units": "m s**-1"
-        },
-        "wdir": {
-          "value": 219.15,
-          "units": "Degree true"
-        },
-        "swh": {
-          "value": 0.35,
-          "units": "m"
-        },
-        "perpw": {
-          "value": 4.19,
-          "units": "s"
-        },
-        "dirpw": {
-          "value": 143.31,
-          "units": "Degree true"
-        },
-        "shww": {
-          "value": 0.27,
-          "units": "m"
-        },
-        "shts_partition_1": {
-          "value": 0.21,
-          "units": "m"
-        },
-        "shts_partition_2": {
-          "value": 0.09,
-          "units": "m"
-        },
-        "shts_partition_3": null,
-        "mpww": {
-          "value": 2.77,
-          "units": "s"
-        },
-        "mpts_partition_1": {
-          "value": 4.2,
-          "units": "s"
-        },
-        "mpts_partition_2": {
-          "value": 6.97,
-          "units": "s"
-        },
-        "mpts_partition_3": null,
-        "wvdir": {
-          "value": 211.06,
-          "units": "Degree true"
-        },
-        "swdir_partition_1": {
-          "value": 146.17,
-          "units": "Degree true"
-        },
-        "swdir_partition_2": {
-          "value": 178.44,
-          "units": "Degree true"
-        },
-        "swdir_partition_3": null
-      }
-    },
-    {
-      "forecast_hour": 12,
-      "valid_utc": "2026-11-06T00:00:00Z",
-      "ocean_gridpoint": {
-        "lat": 30.1667,
-        "lon": -86.5,
-        "distance_km": 3.8
-      },
-      "fields": {
-        "ws": {
-          "value": 3.17,
-          "units": "m s**-1"
-        },
-        "wdir": {
-          "value": 225.11,
-          "units": "Degree true"
-        },
-        "swh": {
-          "value": 0.31,
-          "units": "m"
-        },
-        "perpw": {
-          "value": 4.05,
-          "units": "s"
-        },
-        "dirpw": {
-          "value": 145.26,
-          "units": "Degree true"
-        },
-        "shww": {
-          "value": 0.24,
-          "units": "m"
-        },
-        "shts_partition_1": {
-          "value": 0.18,
-          "units": "m"
-        },
-        "shts_partition_2": {
-          "value": 0.09,
-          "units": "m"
-        },
-        "shts_partition_3": null,
-        "mpww": {
-          "value": 2.81,
-          "units": "s"
-        },
-        "mpts_partition_1": {
-          "value": 4.07,
-          "units": "s"
-        },
-        "mpts_partition_2": {
-          "value": 7.0,
-          "units": "s"
-        },
-        "mpts_partition_3": null,
-        "wvdir": {
-          "value": 209.64,
-          "units": "Degree true"
-        },
-        "swdir_partition_1": {
-          "value": 146.93,
-          "units": "Degree true"
-        },
-        "swdir_partition_2": {
-          "value": 178.72,
-          "units": "Degree true"
-        },
-        "swdir_partition_3": null
-      }
-    },
-    {
-      "forecast_hour": 15,
       "valid_utc": "2026-11-06T03:00:00Z",
       "ocean_gridpoint": {
         "lat": 30.1667,
@@ -301,97 +21,27 @@
       },
       "fields": {
         "ws": {
-          "value": 3.12,
+          "value": 3.52,
           "units": "m s**-1"
         },
         "wdir": {
-          "value": 220.46,
+          "value": 208.66,
           "units": "Degree true"
         },
         "swh": {
-          "value": 0.26,
+          "value": 0.29,
           "units": "m"
         },
         "perpw": {
-          "value": 3.98,
+          "value": 3.92,
           "units": "s"
         },
         "dirpw": {
-          "value": 145.29,
+          "value": 146.8,
           "units": "Degree true"
         },
         "shww": {
-          "value": 0.19,
-          "units": "m"
-        },
-        "shts_partition_1": {
-          "value": 0.16,
-          "units": "m"
-        },
-        "shts_partition_2": {
-          "value": 0.09,
-          "units": "m"
-        },
-        "shts_partition_3": null,
-        "mpww": {
-          "value": 2.71,
-          "units": "s"
-        },
-        "mpts_partition_1": {
-          "value": 4.0,
-          "units": "s"
-        },
-        "mpts_partition_2": {
-          "value": 7.02,
-          "units": "s"
-        },
-        "mpts_partition_3": null,
-        "wvdir": {
-          "value": 205.74,
-          "units": "Degree true"
-        },
-        "swdir_partition_1": {
-          "value": 147.33,
-          "units": "Degree true"
-        },
-        "swdir_partition_2": {
-          "value": 178.33,
-          "units": "Degree true"
-        },
-        "swdir_partition_3": null
-      }
-    },
-    {
-      "forecast_hour": 18,
-      "valid_utc": "2026-11-06T06:00:00Z",
-      "ocean_gridpoint": {
-        "lat": 30.1667,
-        "lon": -86.5,
-        "distance_km": 3.8
-      },
-      "fields": {
-        "ws": {
-          "value": 4.38,
-          "units": "m s**-1"
-        },
-        "wdir": {
-          "value": 243.96,
-          "units": "Degree true"
-        },
-        "swh": {
-          "value": 0.26,
-          "units": "m"
-        },
-        "perpw": {
-          "value": 3.91,
-          "units": "s"
-        },
-        "dirpw": {
-          "value": 146.36,
-          "units": "Degree true"
-        },
-        "shww": {
-          "value": 0.2,
+          "value": 0.23,
           "units": "m"
         },
         "shts_partition_1": {
@@ -404,35 +54,114 @@
         },
         "shts_partition_3": null,
         "mpww": {
-          "value": 2.11,
+          "value": 2.82,
           "units": "s"
         },
         "mpts_partition_1": {
-          "value": 3.93,
+          "value": 3.95,
           "units": "s"
         },
         "mpts_partition_2": {
-          "value": 7.03,
+          "value": 6.99,
           "units": "s"
         },
         "mpts_partition_3": null,
         "wvdir": {
-          "value": 216.35,
+          "value": 197.89,
           "units": "Degree true"
         },
         "swdir_partition_1": {
-          "value": 148.34,
+          "value": 148.13,
           "units": "Degree true"
         },
         "swdir_partition_2": {
-          "value": 179.48,
+          "value": 177.1,
           "units": "Degree true"
         },
         "swdir_partition_3": null
       }
     },
     {
-      "forecast_hour": 21,
+      "forecast_hour": 6,
+      "valid_utc": "2026-11-06T06:00:00Z",
+      "ocean_gridpoint": {
+        "lat": 30.1667,
+        "lon": -86.5,
+        "distance_km": 3.8
+      },
+      "fields": {
+        "ws": {
+          "value": 3.42,
+          "units": "m s**-1"
+        },
+        "wdir": {
+          "value": 258.62,
+          "units": "Degree true"
+        },
+        "swh": {
+          "value": 0.26,
+          "units": "m"
+        },
+        "perpw": {
+          "value": 3.8,
+          "units": "s"
+        },
+        "dirpw": {
+          "value": 150.66,
+          "units": "Degree true"
+        },
+        "shww": {
+          "value": 0.15,
+          "units": "m"
+        },
+        "shts_partition_1": {
+          "value": 0.16,
+          "units": "m"
+        },
+        "shts_partition_2": {
+          "value": 0.12,
+          "units": "m"
+        },
+        "shts_partition_3": {
+          "value": 0.09,
+          "units": "m"
+        },
+        "mpww": {
+          "value": 2.92,
+          "units": "s"
+        },
+        "mpts_partition_1": {
+          "value": 2.4,
+          "units": "s"
+        },
+        "mpts_partition_2": {
+          "value": 3.84,
+          "units": "s"
+        },
+        "mpts_partition_3": {
+          "value": 6.96,
+          "units": "s"
+        },
+        "wvdir": {
+          "value": 238.64,
+          "units": "Degree true"
+        },
+        "swdir_partition_1": {
+          "value": 168.05,
+          "units": "Degree true"
+        },
+        "swdir_partition_2": {
+          "value": 149.18,
+          "units": "Degree true"
+        },
+        "swdir_partition_3": {
+          "value": 177.5,
+          "units": "Degree true"
+        }
+      }
+    },
+    {
+      "forecast_hour": 9,
       "valid_utc": "2026-11-06T09:00:00Z",
       "ocean_gridpoint": {
         "lat": 30.1667,
@@ -441,68 +170,77 @@
       },
       "fields": {
         "ws": {
-          "value": 5.51,
+          "value": 5.26,
           "units": "m s**-1"
         },
         "wdir": {
-          "value": 312.46,
+          "value": 324.02,
           "units": "Degree true"
         },
         "swh": {
-          "value": 0.31,
+          "value": 0.3,
           "units": "m"
         },
         "perpw": {
-          "value": 2.25,
+          "value": 2.57,
           "units": "s"
         },
         "dirpw": {
-          "value": 278.74,
+          "value": 214.21,
           "units": "Degree true"
         },
         "shww": {
-          "value": 0.28,
+          "value": 0.19,
           "units": "m"
         },
         "shts_partition_1": {
-          "value": 0.12,
+          "value": 0.19,
           "units": "m"
         },
         "shts_partition_2": {
-          "value": 0.09,
+          "value": 0.11,
           "units": "m"
         },
-        "shts_partition_3": null,
+        "shts_partition_3": {
+          "value": 0.08,
+          "units": "m"
+        },
         "mpww": {
-          "value": 2.25,
+          "value": 1.97,
           "units": "s"
         },
         "mpts_partition_1": {
-          "value": 3.83,
+          "value": 2.63,
           "units": "s"
         },
         "mpts_partition_2": {
-          "value": 7.03,
+          "value": 3.76,
           "units": "s"
         },
-        "mpts_partition_3": null,
+        "mpts_partition_3": {
+          "value": 6.96,
+          "units": "s"
+        },
         "wvdir": {
-          "value": 278.66,
+          "value": 317.28,
           "units": "Degree true"
         },
         "swdir_partition_1": {
-          "value": 148.06,
+          "value": 209.99,
           "units": "Degree true"
         },
         "swdir_partition_2": {
-          "value": 179.95,
+          "value": 148.23,
           "units": "Degree true"
         },
-        "swdir_partition_3": null
+        "swdir_partition_3": {
+          "value": 177.61,
+          "units": "Degree true"
+        }
       }
     },
     {
-      "forecast_hour": 24,
+      "forecast_hour": 12,
       "valid_utc": "2026-11-06T12:00:00Z",
       "ocean_gridpoint": {
         "lat": 30.1667,
@@ -511,68 +249,77 @@
       },
       "fields": {
         "ws": {
-          "value": 4.68,
+          "value": 5.22,
           "units": "m s**-1"
         },
         "wdir": {
-          "value": 344.24,
+          "value": 2.27,
           "units": "Degree true"
         },
         "swh": {
-          "value": 0.34,
+          "value": 0.35,
           "units": "m"
         },
         "perpw": {
-          "value": 2.7,
+          "value": 2.59,
           "units": "s"
         },
         "dirpw": {
-          "value": 279.29,
+          "value": 279.99,
           "units": "Degree true"
         },
         "shww": {
-          "value": 0.32,
+          "value": 0.27,
           "units": "m"
         },
         "shts_partition_1": {
-          "value": 0.1,
+          "value": 0.18,
           "units": "m"
         },
         "shts_partition_2": {
+          "value": 0.1,
+          "units": "m"
+        },
+        "shts_partition_3": {
           "value": 0.08,
           "units": "m"
         },
-        "shts_partition_3": null,
         "mpww": {
-          "value": 2.69,
+          "value": 2.36,
           "units": "s"
         },
         "mpts_partition_1": {
-          "value": 3.76,
+          "value": 2.74,
           "units": "s"
         },
         "mpts_partition_2": {
-          "value": 7.0,
+          "value": 3.7,
           "units": "s"
         },
-        "mpts_partition_3": null,
+        "mpts_partition_3": {
+          "value": 6.96,
+          "units": "s"
+        },
         "wvdir": {
-          "value": 295.55,
+          "value": 339.73,
           "units": "Degree true"
         },
         "swdir_partition_1": {
-          "value": 148.16,
+          "value": 234.98,
           "units": "Degree true"
         },
         "swdir_partition_2": {
-          "value": 180.39,
+          "value": 151.58,
           "units": "Degree true"
         },
-        "swdir_partition_3": null
+        "swdir_partition_3": {
+          "value": 177.92,
+          "units": "Degree true"
+        }
       }
     },
     {
-      "forecast_hour": 27,
+      "forecast_hour": 15,
       "valid_utc": "2026-11-06T15:00:00Z",
       "ocean_gridpoint": {
         "lat": 30.1667,
@@ -581,31 +328,31 @@
       },
       "fields": {
         "ws": {
-          "value": 5.89,
+          "value": 5.1,
           "units": "m s**-1"
         },
         "wdir": {
-          "value": 1.5,
+          "value": 353.64,
           "units": "Degree true"
         },
         "swh": {
-          "value": 0.37,
+          "value": 0.36,
           "units": "m"
         },
         "perpw": {
-          "value": 2.63,
+          "value": 2.58,
           "units": "s"
         },
         "dirpw": {
-          "value": 314.58,
+          "value": 340.63,
           "units": "Degree true"
         },
         "shww": {
-          "value": 0.32,
+          "value": 0.31,
           "units": "m"
         },
         "shts_partition_1": {
-          "value": 0.15,
+          "value": 0.14,
           "units": "m"
         },
         "shts_partition_2": {
@@ -617,41 +364,41 @@
           "units": "m"
         },
         "mpww": {
-          "value": 2.51,
+          "value": 2.52,
           "units": "s"
         },
         "mpts_partition_1": {
-          "value": 2.98,
+          "value": 3.2,
           "units": "s"
         },
         "mpts_partition_2": {
-          "value": 3.71,
+          "value": 3.64,
           "units": "s"
         },
         "mpts_partition_3": {
-          "value": 6.96,
+          "value": 6.98,
           "units": "s"
         },
         "wvdir": {
-          "value": 345.96,
+          "value": 347.17,
           "units": "Degree true"
         },
         "swdir_partition_1": {
-          "value": 252.09,
+          "value": 243.24,
           "units": "Degree true"
         },
         "swdir_partition_2": {
-          "value": 150.48,
+          "value": 155.29,
           "units": "Degree true"
         },
         "swdir_partition_3": {
-          "value": 180.86,
+          "value": 178.31,
           "units": "Degree true"
         }
       }
     },
     {
-      "forecast_hour": 30,
+      "forecast_hour": 18,
       "valid_utc": "2026-11-06T18:00:00Z",
       "ocean_gridpoint": {
         "lat": 30.1667,
@@ -660,31 +407,31 @@
       },
       "fields": {
         "ws": {
-          "value": 5.24,
+          "value": 5.18,
           "units": "m s**-1"
         },
         "wdir": {
-          "value": 344.68,
+          "value": 342.2,
           "units": "Degree true"
         },
         "swh": {
-          "value": 0.33,
+          "value": 0.34,
           "units": "m"
         },
         "perpw": {
-          "value": 2.61,
+          "value": 2.58,
           "units": "s"
         },
         "dirpw": {
-          "value": 328.67,
+          "value": 341.91,
           "units": "Degree true"
         },
         "shww": {
-          "value": 0.29,
+          "value": 0.3,
           "units": "m"
         },
         "shts_partition_1": {
-          "value": 0.1,
+          "value": 0.11,
           "units": "m"
         },
         "shts_partition_2": {
@@ -700,37 +447,37 @@
           "units": "s"
         },
         "mpts_partition_1": {
-          "value": 2.9,
+          "value": 3.14,
           "units": "s"
         },
         "mpts_partition_2": {
-          "value": 3.66,
+          "value": 3.58,
           "units": "s"
         },
         "mpts_partition_3": {
-          "value": 6.92,
+          "value": 6.94,
           "units": "s"
         },
         "wvdir": {
-          "value": 346.14,
+          "value": 341.55,
           "units": "Degree true"
         },
         "swdir_partition_1": {
-          "value": 249.81,
+          "value": 240.68,
           "units": "Degree true"
         },
         "swdir_partition_2": {
-          "value": 148.44,
+          "value": 154.29,
           "units": "Degree true"
         },
         "swdir_partition_3": {
-          "value": 181.42,
+          "value": 179.23,
           "units": "Degree true"
         }
       }
     },
     {
-      "forecast_hour": 33,
+      "forecast_hour": 21,
       "valid_utc": "2026-11-06T21:00:00Z",
       "ocean_gridpoint": {
         "lat": 30.1667,
@@ -739,31 +486,31 @@
       },
       "fields": {
         "ws": {
-          "value": 5.29,
+          "value": 6.3,
           "units": "m s**-1"
         },
         "wdir": {
-          "value": 332.59,
+          "value": 335.27,
           "units": "Degree true"
         },
         "swh": {
-          "value": 0.26,
+          "value": 0.33,
           "units": "m"
         },
         "perpw": {
-          "value": 2.31,
+          "value": 2.41,
           "units": "s"
         },
         "dirpw": {
-          "value": 336.32,
+          "value": 334.4,
           "units": "Degree true"
         },
         "shww": {
-          "value": 0.24,
+          "value": 0.3,
           "units": "m"
         },
         "shts_partition_1": {
-          "value": 0.07,
+          "value": 0.08,
           "units": "m"
         },
         "shts_partition_2": {
@@ -775,15 +522,15 @@
           "units": "m"
         },
         "mpww": {
-          "value": 2.28,
+          "value": 2.39,
           "units": "s"
         },
         "mpts_partition_1": {
-          "value": 3.12,
+          "value": 3.45,
           "units": "s"
         },
         "mpts_partition_2": {
-          "value": 6.87,
+          "value": 6.88,
           "units": "s"
         },
         "mpts_partition_3": {
@@ -791,25 +538,25 @@
           "units": "s"
         },
         "wvdir": {
-          "value": 336.55,
+          "value": 331.58,
           "units": "Degree true"
         },
         "swdir_partition_1": {
-          "value": 246.73,
+          "value": 239.06,
           "units": "Degree true"
         },
         "swdir_partition_2": {
-          "value": 181.83,
+          "value": 180.42,
           "units": "Degree true"
         },
         "swdir_partition_3": {
-          "value": 147.71,
+          "value": 155.51,
           "units": "Degree true"
         }
       }
     },
     {
-      "forecast_hour": 36,
+      "forecast_hour": 24,
       "valid_utc": "2026-11-07T00:00:00Z",
       "ocean_gridpoint": {
         "lat": 30.1667,
@@ -818,27 +565,228 @@
       },
       "fields": {
         "ws": {
-          "value": 7.06,
+          "value": 6.6,
           "units": "m s**-1"
         },
         "wdir": {
-          "value": 356.09,
+          "value": 345.2,
           "units": "Degree true"
         },
         "swh": {
-          "value": 0.46,
+          "value": 0.36,
           "units": "m"
         },
         "perpw": {
-          "value": 2.92,
+          "value": 2.6,
           "units": "s"
         },
         "dirpw": {
-          "value": 344.86,
+          "value": 327.76,
           "units": "Degree true"
         },
         "shww": {
-          "value": 0.44,
+          "value": 0.34,
+          "units": "m"
+        },
+        "shts_partition_1": {
+          "value": 0.07,
+          "units": "m"
+        },
+        "shts_partition_2": {
+          "value": 0.06,
+          "units": "m"
+        },
+        "shts_partition_3": null,
+        "mpww": {
+          "value": 2.59,
+          "units": "s"
+        },
+        "mpts_partition_1": {
+          "value": 6.81,
+          "units": "s"
+        },
+        "mpts_partition_2": {
+          "value": 3.55,
+          "units": "s"
+        },
+        "mpts_partition_3": null,
+        "wvdir": {
+          "value": 334.57,
+          "units": "Degree true"
+        },
+        "swdir_partition_1": {
+          "value": 181.15,
+          "units": "Degree true"
+        },
+        "swdir_partition_2": {
+          "value": 233.15,
+          "units": "Degree true"
+        },
+        "swdir_partition_3": null
+      }
+    },
+    {
+      "forecast_hour": 27,
+      "valid_utc": "2026-11-07T03:00:00Z",
+      "ocean_gridpoint": {
+        "lat": 30.1667,
+        "lon": -86.5,
+        "distance_km": 3.8
+      },
+      "fields": {
+        "ws": {
+          "value": 8.32,
+          "units": "m s**-1"
+        },
+        "wdir": {
+          "value": 356.16,
+          "units": "Degree true"
+        },
+        "swh": {
+          "value": 0.52,
+          "units": "m"
+        },
+        "perpw": {
+          "value": 3.01,
+          "units": "s"
+        },
+        "dirpw": {
+          "value": 348.5,
+          "units": "Degree true"
+        },
+        "shww": {
+          "value": 0.52,
+          "units": "m"
+        },
+        "shts_partition_1": {
+          "value": 0.08,
+          "units": "m"
+        },
+        "shts_partition_2": {
+          "value": 0.05,
+          "units": "m"
+        },
+        "shts_partition_3": null,
+        "mpww": {
+          "value": 3.01,
+          "units": "s"
+        },
+        "mpts_partition_1": {
+          "value": 6.76,
+          "units": "s"
+        },
+        "mpts_partition_2": {
+          "value": 4.52,
+          "units": "s"
+        },
+        "mpts_partition_3": null,
+        "wvdir": {
+          "value": 352.78,
+          "units": "Degree true"
+        },
+        "swdir_partition_1": {
+          "value": 177.44,
+          "units": "Degree true"
+        },
+        "swdir_partition_2": {
+          "value": 235.48,
+          "units": "Degree true"
+        },
+        "swdir_partition_3": null
+      }
+    },
+    {
+      "forecast_hour": 30,
+      "valid_utc": "2026-11-07T06:00:00Z",
+      "ocean_gridpoint": {
+        "lat": 30.1667,
+        "lon": -86.5,
+        "distance_km": 3.8
+      },
+      "fields": {
+        "ws": {
+          "value": 8.51,
+          "units": "m s**-1"
+        },
+        "wdir": {
+          "value": 4.31,
+          "units": "Degree true"
+        },
+        "swh": {
+          "value": 0.61,
+          "units": "m"
+        },
+        "perpw": {
+          "value": 3.33,
+          "units": "s"
+        },
+        "dirpw": {
+          "value": 1.71,
+          "units": "Degree true"
+        },
+        "shww": {
+          "value": 0.61,
+          "units": "m"
+        },
+        "shts_partition_1": {
+          "value": 0.08,
+          "units": "m"
+        },
+        "shts_partition_2": null,
+        "shts_partition_3": null,
+        "mpww": {
+          "value": 3.33,
+          "units": "s"
+        },
+        "mpts_partition_1": {
+          "value": 6.73,
+          "units": "s"
+        },
+        "mpts_partition_2": null,
+        "mpts_partition_3": null,
+        "wvdir": {
+          "value": 2.75,
+          "units": "Degree true"
+        },
+        "swdir_partition_1": {
+          "value": 180.03,
+          "units": "Degree true"
+        },
+        "swdir_partition_2": null,
+        "swdir_partition_3": null
+      }
+    },
+    {
+      "forecast_hour": 33,
+      "valid_utc": "2026-11-07T09:00:00Z",
+      "ocean_gridpoint": {
+        "lat": 30.1667,
+        "lon": -86.5,
+        "distance_km": 3.8
+      },
+      "fields": {
+        "ws": {
+          "value": 8.93,
+          "units": "m s**-1"
+        },
+        "wdir": {
+          "value": 10.39,
+          "units": "Degree true"
+        },
+        "swh": {
+          "value": 0.67,
+          "units": "m"
+        },
+        "perpw": {
+          "value": 3.46,
+          "units": "s"
+        },
+        "dirpw": {
+          "value": 9.08,
+          "units": "Degree true"
+        },
+        "shww": {
+          "value": 0.66,
           "units": "m"
         },
         "shts_partition_1": {
@@ -848,21 +796,82 @@
         "shts_partition_2": null,
         "shts_partition_3": null,
         "mpww": {
-          "value": 2.91,
+          "value": 3.46,
           "units": "s"
         },
         "mpts_partition_1": {
-          "value": 6.83,
+          "value": 6.69,
           "units": "s"
         },
         "mpts_partition_2": null,
         "mpts_partition_3": null,
         "wvdir": {
-          "value": 347.21,
+          "value": 10.78,
           "units": "Degree true"
         },
         "swdir_partition_1": {
-          "value": 182.26,
+          "value": 181.26,
+          "units": "Degree true"
+        },
+        "swdir_partition_2": null,
+        "swdir_partition_3": null
+      }
+    },
+    {
+      "forecast_hour": 36,
+      "valid_utc": "2026-11-07T12:00:00Z",
+      "ocean_gridpoint": {
+        "lat": 30.1667,
+        "lon": -86.5,
+        "distance_km": 3.8
+      },
+      "fields": {
+        "ws": {
+          "value": 8.33,
+          "units": "m s**-1"
+        },
+        "wdir": {
+          "value": 12.4,
+          "units": "Degree true"
+        },
+        "swh": {
+          "value": 0.66,
+          "units": "m"
+        },
+        "perpw": {
+          "value": 3.54,
+          "units": "s"
+        },
+        "dirpw": {
+          "value": 14.39,
+          "units": "Degree true"
+        },
+        "shww": {
+          "value": 0.65,
+          "units": "m"
+        },
+        "shts_partition_1": {
+          "value": 0.07,
+          "units": "m"
+        },
+        "shts_partition_2": null,
+        "shts_partition_3": null,
+        "mpww": {
+          "value": 3.54,
+          "units": "s"
+        },
+        "mpts_partition_1": {
+          "value": 6.64,
+          "units": "s"
+        },
+        "mpts_partition_2": null,
+        "mpts_partition_3": null,
+        "wvdir": {
+          "value": 15.04,
+          "units": "Degree true"
+        },
+        "swdir_partition_1": {
+          "value": 184.4,
           "units": "Degree true"
         },
         "swdir_partition_2": null,
