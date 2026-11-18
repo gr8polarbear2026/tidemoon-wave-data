@@ -66,3 +66,7 @@ test('Reject mismatched index or mixed forecast grid cells',async()=>{
  const r=await panhandleByCoordinates(29.57,-85.29,async()=>({ok:true,json:async()=>responses[i++]}),now);
  assert.equal(r.status,'DATA_ERROR');
 });
+test('Past-only forecast rows do not count as current forecast availability',()=>{
+ const old=structuredClone(sample);old.forecast[0].valid_utc='2026-10-28T03:30:00Z';
+ assert.equal(convert(old,'capesanblas',now).status,'STALE');
+});

@@ -42,7 +42,7 @@ export function convert(data,id,now=Date.now()) {
     safe(f.fields?.swh?.value,0,30)!==null &&
     validCoord(f.ocean_gridpoint?.lat,f.ocean_gridpoint?.lon))
     .sort((a,b)=>Date.parse(a.valid_utc)-Date.parse(b.valid_utc));
-  if(!forecast.length)return {status:'STALE',reason:'No current verified forecast times'};
+  if(!forecast.some(f=>Date.parse(f.valid_utc)>=now))return {status:'STALE',reason:'No remaining verified forecast times'};
   return {status:'CURRENT',source:data.source,location_id:id,location_label:data.location_label,
     generated_at_utc:data.generated_at_utc,model_cycle_utc:data.model_cycle_utc,
     forecast:forecast.map(f=>({
