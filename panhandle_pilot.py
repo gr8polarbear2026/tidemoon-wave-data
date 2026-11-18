@@ -20,6 +20,8 @@ LOCATIONS = {
     "portsaintjoe": {"name":"Port St Joe / St Joseph Bay offshore test", "lat":29.64,"lon":-85.08},
     "capesanblas": {"name":"Cape San Blas offshore test", "lat":29.57,"lon":-85.29},
     "apalachicola": {"name":"Apalachicola / St George Island offshore test", "lat":29.65,"lon":-84.83},
+    "stmarks": {"name":"St. Marks offshore regional model", "lat":29.95,"lon":-84.18},
+    "panacea": {"name":"Panacea offshore regional model", "lat":29.90,"lon":-84.38},
     "carrabellewest": {"name":"Carrabelle offshore test", "lat":29.77,"lon":-84.69},
 }
 def main():

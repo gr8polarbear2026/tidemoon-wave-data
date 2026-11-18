@@ -45,3 +45,24 @@ test('Coordinate API selects proper JSON and returns forecast',async()=>{
   assert.equal(result.status,'CURRENT');
   assert.equal(result.location_id,'capesanblas');
 });
+
+test('Eastern extension never substitutes distant Carrabelle cell',()=>{
+  const old={schema_version:1,points:[{latitude:29.6667,longitude:-84.6666,validated_sites:['carrabellewest']}]};
+  assert.equal(locate(old,30.0783,-84.1783),null);
+});
+test('St Marks entrance selects nearby verified eastern cell',()=>{
+  const east={schema_version:1,points:[{latitude:30,longitude:-84.1666,validated_sites:['stmarks']}]};
+  const found=locate(east,30.0783,-84.1783);
+  assert.equal(found.location_id,'stmarks');assert.ok(found.distance_km<10);
+});
+test('API reports request-to-cell distance consistently in every row',async()=>{
+ const responses=[index,sample];let i=0;
+ const r=await panhandleByCoordinates(29.57,-85.29,async()=>({ok:true,json:async()=>responses[i++]}),now);
+ assert.equal(r.forecast[0].grid.distance_km,r.distance_km);
+});
+test('Reject mismatched index or mixed forecast grid cells',async()=>{
+ const changed=structuredClone(sample);changed.forecast[0].ocean_gridpoint.lon=-85.1;
+ const responses=[index,changed];let i=0;
+ const r=await panhandleByCoordinates(29.57,-85.29,async()=>({ok:true,json:async()=>responses[i++]}),now);
+ assert.equal(r.status,'DATA_ERROR');
+});

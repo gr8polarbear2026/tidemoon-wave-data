@@ -18,6 +18,16 @@ UTC = dt.timezone.utc
 HOURS = tuple(range(3, 37, 3))
 
 
+def validate_eastern_cells(bundles):
+    """Require nearby and stable eastern ocean cells; no distant-reference substitution."""
+    for loc in ('stmarks', 'panacea'):
+        points = [f['ocean_gridpoint'] for f in bundles[loc]['forecast']]
+        if not points or any(p['distance_km'] > 30 for p in points):
+            raise ValueError(f'{loc}: no nearby verified ocean point')
+        if len({(p['lat'], p['lon']) for p in points}) != 1:
+            raise ValueError(f'{loc}: mixed ocean cells')
+
+
 def publish(output, pause):
     if pause < 10:
         raise ValueError("NOAA minimum request interval is 10 seconds")
@@ -40,6 +50,7 @@ def publish(output, pause):
         report = json.loads((Path(opts.output)/"validation_report.json").read_text())
         bundles = publish_forecasts.convert_report(
             report, now, required_regions=tuple(LOCATIONS), required_hours=HOURS)
+        validate_eastern_cells(bundles)
         out = Path(output)
         out.mkdir(parents=True, exist_ok=True)
         publish_forecasts.write_publication(bundles, out)

@@ -2,7 +2,7 @@
 // Returns null outside the validated offshore-grid radius. Never invents waves.
 export const PANHANDLE_IDS = new Set([
   'pensacola','navarre','destin','panamacity','mexicobeach',
-  'portsaintjoe','capesanblas','apalachicola','carrabellewest'
+  'portsaintjoe','capesanblas','apalachicola','carrabellewest','panacea','stmarks'
 ]);
 export const PANHANDLE_RAW = 'https://raw.githubusercontent.com/gr8polarbear2026/tidemoon-wave-data/main/panhandle';
 const validCoord = (a,b) => Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(a)<=90&&Math.abs(b)<=180;
@@ -14,6 +14,8 @@ export function distanceKm(a,b,c,d) {
 }
 export function locate(index,lat,lon,maxKm=90) {
   if (!validCoord(lat,lon)||!index||index.schema_version!==1||!Array.isArray(index.points)) return null;
+  // Eastern extension is supported only by a nearby verified ocean cell.
+  if (lon >= -84.5) maxKm=Math.min(maxKm,30);
   let best=null;
   for (const point of index.points) {
     const a=point.latitude,b=point.longitude;
@@ -73,6 +75,12 @@ export async function panhandleByCoordinates(lat,lon,fetchFn=fetch,now=Date.now(
     const response=await fetchFn(PANHANDLE_RAW+'/'+match.location_id+'.json');
     if(!response.ok)return {status:'UPSTREAM_ERROR',code:response.status};
     const result=convert(await response.json(),match.location_id,now);
+    if (result.status==='CURRENT') {
+      // Reject stale/mismatched index publications and mixed model cells.
+      if(result.forecast.some(f=>distanceKm(f.grid.lat,f.grid.lon,match.grid.lat,match.grid.lon)>0.1))
+        return {status:'DATA_ERROR',reason:'Forecast and validated index grid mismatch'};
+      for(const f of result.forecast) f.grid={lat:f.grid.lat,lon:f.grid.lon,distance_km:match.distance_km};
+    }
     return {...result,requested_coordinates:{lat,lon},selected_grid:match.grid,distance_km:match.distance_km};
   }catch{return {status:'UPSTREAM_ERROR'};}
 }
