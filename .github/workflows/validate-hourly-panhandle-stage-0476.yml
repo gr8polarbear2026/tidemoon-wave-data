@@ -1,0 +1,50 @@
+name: Coast Pilot extended NOAA validation only
+on:
+  push:
+    branches: ['coast-wave-validation-0476']
+    paths: ['coast-wave-validation-0476/START.txt']
+permissions:
+  contents: read
+concurrency:
+  group: coast-wave-validation-0476
+  cancel-in-progress: false
+jobs:
+  validate:
+    if: github.ref_name == 'coast-wave-validation-0476'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: coast-wave-validation-0476
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Cold install and test the wave decoder
+        run: |
+          time python -m pip install --only-binary=:all: --timeout 20 --retries 2 -r requirements-panhandle.txt
+          python -c 'import eccodes; print("GRIB decoder",eccodes.codes_get_api_version())'
+      - name: Check matching, missing data, freshness and retries
+        run: |
+          node --test tests/panhandle_lookup.test.mjs
+          python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Prepare all eleven locations from real NOAA in an isolated stage
+        run: |
+          test -f START.txt
+          time python publish_panhandle.py --output "$RUNNER_TEMP/panhandle-stage" --pause 10.5
+      - name: Validate the complete native hourly run and replay API responses
+        run: node tests/replay_staged_contract.mjs "$RUNNER_TEMP/panhandle-stage" "$RUNNER_TEMP/panhandle-response"
+      - name: Store validation data only
+        uses: actions/upload-artifact@v4
+        with:
+          name: coast-wave-0476-verified-stage
+          retention-days: 3
+          path: |
+            ${{ runner.temp }}/panhandle-stage/*.json
+            ${{ runner.temp }}/panhandle-response/*.json
