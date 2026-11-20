@@ -1,0 +1,49 @@
+name: Coast Pilot +120h native NOAA staging only
+on:
+  push:
+    branches: ['coast-wave-validation-0120']
+    paths: ['coast-wave-validation-0120/START.txt']
+permissions:
+  contents: read
+concurrency:
+  group: coast-wave-validation-0120
+  cancel-in-progress: false
+jobs:
+  validate:
+    if: github.ref_name == 'coast-wave-validation-0120'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    defaults:
+      run:
+        working-directory: coast-wave-validation-0120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Cold install and verify NOAA decoder
+        run: |
+          time python -m pip install --no-cache-dir --only-binary=:all: --timeout 20 --retries 2 -r requirements-panhandle.txt
+          python -c 'import eccodes; print("GRIB decoder",eccodes.codes_get_api_version())'
+      - name: Verify existing NOAA parsing and failure guards
+        run: |
+          node --test tests/panhandle_lookup.test.mjs
+          python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Stage 118 real native NOAA hours for eleven locations; verify exact +72 parity
+        run: |
+          test -f START.txt
+          time python stage_120.py --output "$RUNNER_TEMP/panhandle-0120" --published-reference ../panhandle
+      - name: Replay isolated Worker contract with +120 test ceiling and unchanged +72 prefix
+        run: node tests/replay_120.mjs "$RUNNER_TEMP/panhandle-0120"
+      - name: Store validated staging files only
+        uses: actions/upload-artifact@v4
+        with:
+          name: coast-wave-0120-stage-not-for-publication
+          retention-days: 3
+          path: ${{ runner.temp }}/panhandle-0120/*.json
+          if-no-files-found: error
