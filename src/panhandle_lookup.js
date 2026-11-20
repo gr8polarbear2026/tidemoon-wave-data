@@ -27,6 +27,9 @@ export function locate(index,lat,lon,maxKm=90) {
   }
   return best;
 }
+// Only this eleven-location Panhandle route uses the extended window.
+export const PANHANDLE_LOOKBACK_MS=90*60*1000;
+export const PANHANDLE_LOOKAHEAD_MS=72*3600*1000;
 const finite=n=>typeof n==='number'&&Number.isFinite(n);
 const safe=(v,min,max)=>finite(v)&&v>=min&&v<=max?v:null;
 export function convert(data,id,now=Date.now()) {
@@ -37,8 +40,8 @@ export function convert(data,id,now=Date.now()) {
   if(cycle>now+900000 || now-cycle>18*3600000)
     return {status:'STALE',model_cycle_utc:data.model_cycle_utc};
   const forecast=data.forecast.filter(f=>
-    Number.isFinite(Date.parse(f.valid_utc))&&Date.parse(f.valid_utc)>=now-3600000 &&
-    Date.parse(f.valid_utc)<=now+48*3600000 &&
+    Number.isFinite(Date.parse(f.valid_utc))&&Date.parse(f.valid_utc)>=now-PANHANDLE_LOOKBACK_MS &&
+    Date.parse(f.valid_utc)<=now+PANHANDLE_LOOKAHEAD_MS &&
     safe(f.fields?.swh?.value,0,30)!==null &&
     validCoord(f.ocean_gridpoint?.lat,f.ocean_gridpoint?.lon))
     .sort((a,b)=>Date.parse(a.valid_utc)-Date.parse(b.valid_utc));

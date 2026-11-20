@@ -19,39 +19,77 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Verify coordinate lookup and freshness behavior
-        run: node --test tests/panhandle_lookup.test.mjs
-      - name: Install GRIB decoder and requirements
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install and test the wheel-based GRIB decoder
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libeccodes0 libeccodes-dev
-          python -m pip install -r requirements.txt
-      - name: Test NOAA download retries and eastern-cell validation
-        run: python -m unittest discover -s tests -p 'test_*.py' -v
-      - name: Validate and prepare all eleven Panhandle forecasts
-        run: python publish_panhandle.py --output panhandle --pause 10.5
-      - name: Commit only validated Panhandle JSON (never legacy files)
+          python -m pip install --only-binary=:all: --timeout 20 --retries 2 -r requirements-panhandle.txt
+          python -c 'import eccodes; print("GRIB decoder",eccodes.codes_get_api_version())'
+      - name: Verify freshness, spatial rules and failed batch protection
+        run: |
+          node --test tests/panhandle_lookup.test.mjs
+          python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Prepare all eleven Panhandle forecasts without writing the live directory
+        run: python publish_panhandle.py --previous panhandle --output "$RUNNER_TEMP/panhandle-stage" --pause 10.5
+      - name: Replay and verify the stage through the deployed API contract
+        run: |
+          if [[ -f "$RUNNER_TEMP/panhandle-stage/index.json" ]]; then
+            node tests/replay_staged_contract.mjs "$RUNNER_TEMP/panhandle-stage" "$RUNNER_TEMP/panhandle-response"
+          fi
+      - name: Commit only validated Panhandle JSON with a freshness lease
         run: |
           set -euo pipefail
-          # Keep generated, validated data outside the checkout during synchronization.
-          stage_dir="$(mktemp -d)"
-          cp panhandle/*.json "$stage_dir/"
+          stage_dir="$RUNNER_TEMP/panhandle-stage"
+          if [[ ! -f "$stage_dir/index.json" ]]; then
+            echo "Current full forecast is already published."
+            exit 0
+          fi
           for attempt in 1 2 3; do
             git fetch origin main
             git reset --hard origin/main
+            status="$(python - "$stage_dir" <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone, timedelta
+          import json, sys
+          stage = Path(sys.argv[1])
+          index = json.loads((stage/'index.json').read_text())
+          cycle = datetime.fromisoformat(index['model_cycle_utc'])
+          age = datetime.now(timezone.utc)-cycle
+          if age < timedelta(0) or age >= timedelta(hours=18):
+              raise SystemExit('Stage aged out; previous publication retained')
+          prior_path = Path('panhandle/index.json')
+          prior = json.loads(prior_path.read_text()) if prior_path.is_file() else {}
+          prev = datetime.fromisoformat(prior['model_cycle_utc']) if 'model_cycle_utc' in prior else None
+          if prev and prev > cycle:
+              print('skip')
+          elif prev == cycle and all(
+              len(json.loads(p.read_text()).get('forecast', [])) == 70
+              for p in (Path('panhandle')/f'{name}.json' for name in index['locations'])
+              if p.is_file()
+          ) and all((Path('panhandle')/f'{name}.json').is_file() for name in index['locations']):
+              print('skip')
+          else:
+              print('publish')
+          PY
+          )"
+            if [[ "$status" != publish ]]; then
+              echo "Repository already has this complete cycle or a newer cycle."
+              exit 0
+            fi
             mkdir -p panhandle
             cp "$stage_dir"/*.json panhandle/
             git add -- panhandle/*.json
             if git diff --cached --quiet; then
-              echo "No changes in validated forecasts"
+              echo "No changes to validated forecasts."
               exit 0
             fi
-            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Update verified Panhandle NOAA wave forecasts"
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Update verified hourly Panhandle NOAA wave forecasts"
             if git push origin HEAD:main; then
-              echo "Published validated Panhandle forecasts"
+              echo "Published validated hourly Panhandle forecasts."
               exit 0
             fi
-            echo "Main moved during publication; retrying against the latest branch (attempt $attempt/3)"
+            echo "Main moved during publication; retrying (attempt $attempt/3)"
           done
           echo "Unable to publish after three synchronization attempts" >&2
           exit 1

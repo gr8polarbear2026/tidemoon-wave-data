@@ -70,3 +70,35 @@ test('Past-only forecast rows do not count as current forecast availability',()=
  const old=structuredClone(sample);old.forecast[0].valid_utc='2026-10-28T03:30:00Z';
  assert.equal(convert(old,'capesanblas',now).status,'STALE');
 });
+
+test('Expanded Panhandle route retains exact supplied timestamps within its boundary only',()=>{
+  const h=3600000;
+  const offsets=[-90*60000-1,-90*60000,-60*60000,0,48*h+1,72*h,72*h+1];
+  const all=structuredClone(sample);
+  all.forecast=offsets.slice().reverse().map(offset=>({
+    ...sample.forecast[0],valid_utc:new Date(now+offset).toISOString()
+  }));
+  const r=convert(all,'capesanblas',now);
+  assert.equal(r.status,'CURRENT');
+  assert.deepEqual(r.forecast.map(row=>Date.parse(row.valid_utc)-now),offsets.slice(1,-1));
+  assert.equal(r.forecast.at(-1).wave_height_m,0.5);
+  assert.equal(r.forecast.at(-1).swell_partitions[0].height_m,null);
+});
+
+test('Coordinate route does not fabricate hours or resolve an invalid late sample',async()=>{
+  const expanded=structuredClone(sample);
+  const late=structuredClone(expanded.forecast[0]);
+  late.valid_utc=new Date(now+60*3600000).toISOString();
+  late.forecast_hour=64;
+  late.fields.swh.value=0.9;
+  expanded.forecast.push(late);
+  const responses=[index,expanded];let i=0;
+  const r=await panhandleByCoordinates(29.57,-85.29,async()=>({ok:true,json:async()=>responses[i++]}),now);
+  assert.equal(r.status,'CURRENT');
+  assert.deepEqual(r.forecast.map(({valid_utc,wave_height_m})=>[valid_utc,wave_height_m]),
+    [[sample.forecast[0].valid_utc,0.5],[late.valid_utc,0.9]]);
+  late.ocean_gridpoint.lon+=1;
+  i=0;
+  const invalid=await panhandleByCoordinates(29.57,-85.29,async()=>({ok:true,json:async()=>responses[i++]}),now);
+  assert.equal(invalid.status,'DATA_ERROR');
+});
