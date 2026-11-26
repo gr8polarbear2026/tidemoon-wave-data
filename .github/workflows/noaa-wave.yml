@@ -47,6 +47,9 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
+      # Pages may not see the uploaded artifact immediately after finalization.
+      - name: Allow the Pages artifact to become visible
+        run: sleep 60
       - name: Publish to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
